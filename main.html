@@ -964,7 +964,7 @@
     // --- Donation Button Logic ---
     function openDonationLink() {
         const donationLink = 'https://tinyurl.com/vishnudonation'; 
-        if (donationLink === 'https://tinyurl.com/vishnudonation') {
+        if (!donationLink || donationLink === 'YOUR_DONATION_LINK_HERE')s {
             const modal = document.createElement('div');
             modal.style.position = 'fixed';
             modal.style.left = '0';
