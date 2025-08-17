@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=1.0, user-scalable=no">
+    <title>Onaavesham 2.0 | NFSU</title>
+    
+    <link href="https://fonts.cdnfonts.com/css/samarkan" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Tangerine:wght@700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Global Styles & CSS Reset --- */
+        :root {
+            --primary-gold: #ffd700;
+            --primary-orange: #f7931e;
+            --primary-red: #ff6b35;
+            --dark-bg: #120c0b;
+            --light-text: #f0f0f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)),
+                url("images/bg.webp") center/cover no-repeat fixed;
+            overflow-anchor: none; /* Prevents unwanted scroll jumps on load */
+        }
+        
+        /* --- New Global Fade-In Overlay --- */
+        .fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark-bg);
+            z-index: 999;
+           /* transition: opacity 0.5s ease-in-out;--*/
+            pointer-events: none;
+        }
+        .fade-overlay.hidden {
+            opacity: 0;
+        }
+
+        /* --- Dynamic Falling Flowers --- */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .floating-flower {
+            position: absolute;
+            top: -10vh;
+            animation: fall linear infinite;
+            opacity: 0.5;
+            text-shadow: 0 0 8px rgba(0,0,0,0.5);
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            padding-bottom: 15vh; 
+            position: relative;
+        }
+        
+        .hero-header {
+            position: absolute;
+            top: 2rem;
+            text-align: center;
+            width: 100%;
+            padding: 0 1rem;
+        }
+        
+        .university-name {
+            font-family: 'Cinzel', serif;
+            color: var(--primary-gold);
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .event-subtitle {
+            font-family: 'Cinzel', serif;
+            color: var(--primary-orange);
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            margin-top: 0.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .main-title {
+            font-family: 'Samarkan', serif;
+            font-size: clamp(3rem, 15vw, 8rem);
+            color: white;
+            margin: 1rem 0;
+            animation: glow 2.5s ease-in-out infinite alternate;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 30px var(--primary-gold);
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 25px var(--primary-gold); }
+            to { text-shadow: 0 0 15px rgba(0,0,0,0.8), 0 0 50px var(--primary-gold); }
+        }
+        
+        .hero-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .hero-button {
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-decoration: none;
+        }
+
+        .hero-button:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 0 25px var(--primary-orange);
+        }
+        
+        .event-date {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+            margin: -1.5rem auto 2rem auto;
+            color: var(--primary-gold);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.8rem, 3vw, 1rem);
+            font-weight: 600;
+        }
+        
+        /* --- Flip Clock Countdown Timer --- */
+        .flip-clock {
+            text-align: center;
+            perspective: 400px;
+        }
+        .flip-clock *, .flip-clock *:before, .flip-clock *:after {
+            box-sizing: border-box;
+        }
+        .flip-clock__piece {
+            display: inline-block;
+            margin: 0 5px;
+        }
+        .flip-clock__slot {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--light-text);
+        }
+        .card {
+            display: block;
+            position: relative;
+            padding-bottom: 0.72em;
+            font-size: 3rem;
+            line-height: 0.95;
+        }        
+        
+        .card__top,
+        .card__bottom,
+        .card__back::before,
+        .card__back::after {
+            display: block;
+            height: 0.72em;
+            color: var(--primary-gold);
+            background: linear-gradient(145deg, #4a3221 0%, #3b2a1a 50%, #2b1c11 100%);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.15),
+                        inset 0 -1px 1px rgba(0,0,0,0.3),
+                        0 2px 3px rgba(0,0,0,0.4);
+            padding: 0.25em;
+            border-radius: 0.15em 0.15em 0 0;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            width: 1.8em;
+            text-align: center;
+        }
+        
+        .card__bottom {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            border-top: solid 1px rgba(0,0,0,0.3);
+            border-radius: 0 0 0.15em 0.15em;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .card__bottom::after {
+            display: block;
+            margin-top: -0.72em;
+            content: attr(data-value);
+        }
+        
+        .card__back {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            left: 0;
+            pointer-events: none;
+        }
+        .card__back::before {
+            content: attr(data-value);
+            position: relative;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .flip .card__back::before {
+            animation: flipTop 0.3s cubic-bezier(.37,.01,.94,.35);
+            animation-fill-mode: both;
+            transform-origin: center bottom;
+        }
+        .flip .card__back .card__bottom {
+            transform-origin: center top;
+            animation-fill-mode: both;
+            animation: flipBottom 0.45s cubic-bezier(.15,.45,.28,1);
+            animation-delay: 0.3s;
+        }
+        
+        @keyframes flipTop {
+            0% { transform: rotateX(0deg); z-index: 2; }
+            0%, 99% { opacity: 0.99; }
+            100% { transform: rotateX(-90deg); opacity: 0; }
+        }
+        @keyframes flipBottom {
+            0% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0deg); }
+        }
+
+        /* --- Frosted Glass Container for each section --- */
+        .frosted-container {
+            max-width: 1400px;
+            margin: 2.5rem auto;
+            background: rgba(18, 12, 11, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+        }
+        
+        /* --- Section Styling --- */
+        .content-section {
+            padding: 4rem 2rem;
+            position: relative;
+        }
+        
+        .section-title {
+            font-family: 'Cinzel Decorative', cursive;
+            text-align: center;
+            font-size: clamp(2.5rem, 7vw, 4rem);
+            color: var(--primary-gold);
+            margin-bottom: 4rem;
+            font-weight: 400;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 60px;
+            background-image: url('images/divider.webp');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.6;
+        }
+
+        /* --- Simple Scrolling Gallery --- */
+        .gallery-container {
+            position: relative;
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .slides-track {
+            display: flex;
+            width: calc(350px * 14);
+            animation: slideMove 40s linear infinite;
+        }
+        .gallery-container:hover .slides-track {
+            animation-play-state: paused;
+        }
+        @keyframes slideMove {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(-350px * 7)); }
+        }
+        .slide {
+            flex-shrink: 0;
+            width: 330px;
+            height: 250px;
+            margin: 10px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .slide:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* --- Sadhya & Events Section --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .text-content h3 {
+            font-family: 'Tangerine', cursive;
+            color: var(--primary-orange);
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .text-content p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+        
+        .media-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            position: relative;
+            transition: transform 0.4s ease;
+        }
+        .media-container:hover {
+            transform: scale(1.03);
+        }
+        .media-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .media-container:hover::after {
+            opacity: 1;
+        }
+        
+        .media-container video, .media-container img {
+            width: 100%;
+            max-width: 100%; 
+            height: auto;
+            display: block;
+        }
+
+        /* --- Button Styles --- */
+        .primary-btn {
+            background: linear-gradient(45deg, var(--primary-orange), var(--primary-red));
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        /* --- New Instagram Section Styles --- */
+        .instagram-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 5px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .instagram-grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .instagram-media-container {
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transition: transform 0.4s ease;
+            cursor: pointer;
+        }
+        .instagram-media-container:hover {
+            transform: scale(1.05);
+        }
+        .instagram-btn {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        }
+        .instagram-btn:hover {
+            box-shadow: 0 10px 20px rgba(214, 36, 159, 0.4);
+        }
+
+        /* --- Donation Section --- */
+        .donation-section { text-align: center; }
+        .donation-btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            box-shadow: 0 15px 40px rgba(255, 71, 87, 0.4);
+        }
+
+        /* --- Contact Section --- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+        .contact-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .contact-card h3 {
+            font-family: 'Hind Siliguri', sans-serif;
+            color: var(--primary-orange);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .contact-card .name { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .contact-card .phone { margin: 1rem 0; font-size: 0.9rem; }
+
+        .whatsapp-button {
+            background: #25D366;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .whatsapp-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        /* --- Footer --- */
+        .contact-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+        }
+        
+        .social-heading {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        /* --- Social Media Share Section --- */
+        .social-share {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .social-share-btn {
+            display: inline-block;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        .social-share-btn:hover {
+            transform: translateY(-3px);
+        }
+        #share-whatsapp:hover { background: #25D366; }
+        #share-facebook:hover { background: #1877F2; }
+        #share-instagram:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+        
+        .social-share-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* --- Page Footer --- */
+        .page-footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* --- Scroll animations --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 800px) {
+            .frosted-container {
+                margin: 2rem 1rem;
+            }
+            .flip-clock {
+                transform: scale(0.8);
+            }
+        }
+        @media (max-width: 480px) {
+            .frosted-container {
+                width: 90%; 
+                margin: 2rem auto;
+            }
+            .flip-clock {
+                transform: scale(0.6);
+            }
+            .hero-header {
+                top: 1rem;
+            }
+            .content-section {
+                padding: 3rem 1rem;
+            }
+            .text-content h3 {
+                font-size: 2.8rem;
+            }
+            .text-content p {
+                font-size: 1rem;
+                line-height: 1.8;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fade-overlay"></div>
+    
+    <div class="floating-elements">
+        </div>
+    
+    <header class="hero-section">
+        <div class="hero-header">
+            <h2 class="university-name">NFSU Delhi Campus</h2>
+            <p class="event-subtitle">ഓണോ_त्सव 2.0</p>
+        </div>
+        <div class="hero-content">
+            <div class="hero-actions">
+                <h1 class="main-title">Onaavesham</h1>
+                <div class="flip-clock" id="countdown">
+                    <div class="flip-clock__piece">
+                        <div class="card" id="days">
+                            <div class="card__top">00</div>
+                            <div class="card__bottom" data-value="00"></div>
+                            <div class="card__back" data-value="00">
+                                <div class="card__bottom" data-value="00"></div>
+                            </div>
+                        </div>
+                        <div class="flip-clock__slot">Days</div>
+                    </div>
+                    <div class="flip-clock__piece">
+                        <div class="card" id="hours">
+                            <div class="card__top">00</div>
+                            <div class="card__bottom" data-value="00"></div>
+                            <div class="card__back" data-value="00">
+                                <div class="card__bottom" data-value="00"></div>
+                            </div>
+                        </div>
+                        <div class="flip-clock__slot">Hours</div>
+                    </div>
+                    <div class="flip-clock__piece">
+                        <div class="card" id="minutes">
+                            <div class="card__top">00</div>
+                            <div class="card__bottom" data-value="00"></div>
+                            <div class="card__back" data-value="00">
+                                <div class="card__bottom" data-value="00"></div>
+                            </div>
+                        </div>
+                        <div class="flip-clock__slot">Minutes</div>
+                    </div>
+                    <div class="flip-clock__piece">
+                        <div class="card" id="seconds">
+                            <div class="card__top">00</div>
+                            <div class="card__bottom" data-value="00"></div>
+                            <div class="card__back" data-value="00">
+                                <div class="card__bottom" data-value="00"></div>
+                            </div>
+                        </div>
+                        <div class="flip-clock__slot">Seconds</div>
+                    </div>
+                </div>
+                <div class="event-date">
+                    <span>September 6, 2025</span>
+                    <span>9:30 AM onwards</span>
+                </div>
+                <a href="#memories" class="hero-button">Explore the Celebration</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="frosted-container">
+            <section id="memories" class="content-section">
+                <div class="container fade-in">
+                    <h2 class="section-title">Memories</h2>
+                    <div class="gallery-container">
+                        <div class="slides-track">
+                            <div class="slide"><img src="images/gallery1.webp" srcset="images/gallery1-small.webp 480w, images/gallery1.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 1"></div>
+                            <div class="slide"><img src="images/gallery2.webp" srcset="images/gallery2-small.webp 480w, images/gallery2.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 2"></div>
+                            <div class="slide"><img src="images/gallery3.webp" srcset="images/gallery3-small.webp 480w, images/gallery3.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 3"></div>
+                            <div class="slide"><img src="images/gallery4.webp" srcset="images/gallery4-small.webp 480w, images/gallery4.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 4"></div>
+                            <div class="slide"><img src="images/gallery5.webp" srcset="images/gallery5-small.webp 480w, images/gallery5.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 5"></div>
+                            <div class="slide"><img src="images/gallery6.webp" srcset="images/gallery6-small.webp 480w, images/gallery6.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 6"></div>
+                            <div class="slide"><img src="images/gallery7.webp" srcset="images/gallery7-small.webp 480w, images/gallery7.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 7"></div>
+                            <div class="slide"><img src="images/gallery1.webp" srcset="images/gallery1-small.webp 480w, images/gallery1.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 1"></div>
+                            <div class="slide"><img src="images/gallery2.webp" srcset="images/gallery2-small.webp 480w, images/gallery2.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 2"></div>
+                            <div class="slide"><img src="images/gallery3.webp" srcset="images/gallery3-small.webp 480w, images/gallery3.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 3"></div>
+                            <div class="slide"><img src="images/gallery4.webp" srcset="images/gallery4-small.webp 480w, images/gallery4.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 4"></div>
+                            <div class="slide"><img src="images/gallery5.webp" srcset="images/gallery5-small.webp 480w, images/gallery5.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 5"></div>
+                            <div class="slide"><img src="images/gallery6.webp" srcset="images/gallery6-small.webp 480w, images/gallery6.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 6"></div>
+                            <div class="slide"><img src="images/gallery7.webp" srcset="images/gallery7-small.webp 480w, images/gallery7.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Memory 7"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div class="frosted-container">
+            <section id="sadhya" class="content-section">
+                <div class="container fade-in">
+                    <h2 class="section-title">The Grand Sadhya</h2>
+                    <div class="grid-container">
+                        <div class="text-content">
+                            <h3>🍃 An Authentic Kerala Feast</h3>
+                            <p>Experience the rich culinary heritage of Kerala with our traditional Onam Sadhya. A magnificent spread of over 20 delicious vegetarian dishes served on fresh banana leaves, bringing you the authentic taste of God's Own Country.</p>
+                            <p>From the tangy Sambar to the sweet Payasam, every dish tells a story. Join us for this gastronomic journey that celebrates the essence of Onam.</p>
+                            <a href="https://forms.gle/F6dUy11rQxoMyKv79" target="_blank" class="primary-btn">🍃 Register for Sadhya</a>
+                        </div>
+                        <div class="media-container">
+                           <video width="100%" autoplay muted loop playsinline>
+                                <source src="videos/sadhya.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="frosted-container">
+            <section id="instagram-section" class="content-section">
+                <div class="container fade-in">
+                    <h2 class="section-title">Follow Us on Instagram</h2>
+                    <div class="grid-container">
+                        <div class="text-content">
+                            <h3>📸 Catch the Celebration Live!</h3>
+                            <p>Stay connected with Onaavesham ! Follow us on Instagram for exclusive sneak peeks, behind-the-scenes moments, live updates, and all the festive reels. Don't miss a single beat of the celebration.</p>
+                            <p>Tag us in your photos and videos using **#OnaaveshamNFSU** to be featured on our page!</p>
+                            <a href="https://www.instagram.com/nfsu.onam_utsav?igsh=MTl1OXN5M3Z6aXFjNA==" target="_blank" class="primary-btn instagram-btn">
+                                <svg style="width:24px;height:24px;vertical-align: middle;margin-right: 8px;" viewBox="0 0 24 24"><path fill="currentColor" d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" /></svg>
+                                Follow @Onaavesham
+                            </a>
+                        </div>
+                        <div class="media-container instagram-media-container">
+                            <img src="images/insta.webp" alt="Instagram Feed Preview">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div class="frosted-container">
+            <section id="donate" class="content-section donation-section">
+                <div class="container fade-in">
+                    <h2 class="section-title">Support Our Celebration</h2>
+                    <p style="max-width: 700px; margin: -2rem auto 2.5rem; line-height: 1.7;">
+                        This function is a student-led initiative to celebrate the rich cultural heritage of Kerala. 
+                        Your generous donations help us create an unforgettable Onam experience for everyone.
+                    </p>
+                    <button class="primary-btn donation-btn" onclick="openDonationLink()">
+                        🎁 Make a Donation
+                    </button>
+                </div>
+            </section>
+        </div>
+        
+        <div class="frosted-container">
+            <section id="events" class="content-section">
+                <div class="container fade-in">
+                    <h2 class="section-title">Event Highlights</h2>
+                    <div class="grid-container">
+                        <div class="media-container">
+                            <img src="images/cultural.webp" srcset="images/cultural-small.webp 480w, images/cultural.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Cultural Programs">
+                        </div>
+                        <div class="text-content">
+                            <h3>🎭 Cultural Programs</h3>
+                            <p>Witness mesmerizing performances including Thiruvathira dance, Kathakali, Mohiniyattam, and folk songs that showcase the rich cultural heritage of Kerala.</p>
+                            <a href="https://forms.gle/F6dUy11rQxoMyKv79" target="_blank" class="primary-btn">Register Now</a>
+                        </div>
+                    </div>
+                    <div class="grid-container" style="margin-top: 5rem;">
+                        <div class="text-content">
+                            <h3>🎯 Traditional Games</h3>
+                            <p>Participate in authentic Kerala games like Tug of War (Vadamvali), Musical Chairs, and various team-building activities that bring everyone together in the spirit of friendly competition.</p>
+                            <a href="https://forms.gle/F6dUy11rQxoMyKv79" target="_blank" class="primary-btn">Register Now</a>
+                        </div>
+                        <div class="media-container">
+                            <img src="images/games.webp" srcset="images/games-small.webp 480w, images/games.webp 800w" sizes="(max-width: 600px) 480px, 800px" alt="Traditional Games">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div class="frosted-container">
+            <section id="contact" class="content-section">
+                <div class="container fade-in">
+                    <h2 class="section-title">Contact Us</h2>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <h3>Event Coordinator</h3>
+                            <p class="name">Vishnulal N</p>
+                            <p class="phone">📱 95391 24135</p>
+                            <a href="https://wa.me/919539124135" target="_blank" class="whatsapp-button">💬 WhatsApp</a>
+                        </div>
+                        <div class="contact-card">
+                            <h3>Event Coordinator</h3>
+                            <p class="name">Abhinav Sukumaran</p>
+                            <p class="phone">📱 91883 30471</p>
+                            <a href="https://wa.me/919188330471" target="_blank" class="whatsapp-button">💬 WhatsApp</a>
+                        </div>
+                    </div>
+                    <footer class="contact-footer">
+                        <h4 class="social-heading">Share the Joy</h4>
+                        <div class="social-share">
+                            <a href="#" class="social-share-btn" id="share-whatsapp">
+                                <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.37 21.82 12.04 21.82C17.5 21.82 21.95 17.37 21.95 11.91C21.95 6.45 17.5 2 12.04 2M12.04 3.67C16.56 3.67 20.28 7.39 20.28 11.91C20.28 16.43 16.56 20.15 12.04 20.15C10.56 20.15 9.12 19.78 7.85 19.07L7.45 18.85L4.27 19.73L5.17 16.64L4.95 16.22C4.18 14.88 3.8 13.41 3.8 11.91C3.8 7.39 7.52 3.67 12.04 3.67M16.57 14.46C16.37 14.86 15.33 15.41 14.99 15.61C14.65 15.81 14.28 15.88 13.93 15.75C13.58 15.62 12.66 15.28 11.53 14.24C10.13 12.98 9.21 11.48 8.97 11.08C8.73 10.68 8.89 10.48 9.06 10.31C9.21 10.16 9.39 9.96 9.58 9.75C9.73 9.59 9.79 9.45 9.91 9.22C10.03 8.99 9.97 8.79 9.87 8.59C9.77 8.39 9.26 7.14 9.06 6.64C8.86 6.14 8.66 6.21 8.5 6.21C8.34 6.21 8.14 6.21 7.94 6.21C7.74 6.21 7.44 6.28 7.17 6.54C6.9 6.81 6.2 7.44 6.2 8.69C6.2 9.94 7.2 11.16 7.35 11.36C7.5 11.56 9.16 14.16 11.81 15.3C14.46 16.45 14.83 16.28 15.24 16.25C15.65 16.22 16.57 15.68 16.77 15.08C16.97 14.48 16.97 14.08 16.87 13.98C16.77 13.88 16.77 13.78 16.57 14.46Z" /></svg>
+                            </a>
+                            <a href="#" class="social-share-btn" id="share-facebook">
+                                <svg viewBox="0 0 24 24"><path d="M17,2V2H17V6H15C14.31,6 14,6.81 14,7.5V10H17V14H14V22H10V14H7V10H10V6A4,4 0 0,1 14,2H17Z" /></svg>
+                            </a>
+                            <a href="#" class="social-share-btn" id="share-instagram">
+                                <svg viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" /></svg>
+                            </a>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer class="page-footer">
+        <p>📍 Sector 3, Rohini, New Delhi - 110085 | 🌐 www.nfsu.ac.in</p>
+    </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Setup for fade-in elements on scroll ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach(el => observer.observe(el));
+
+        // --- Setup for falling flowers ---
+        const floatingContainer = document.querySelector('.floating-elements');
+        const flowerEmojis = ['🌺', '🌸', '🏵️', '🌼', '🌻'];
+        function createFloatingFlower() {
+            const flower = document.createElement('div');
+            flower.className = 'floating-flower';
+            flower.innerHTML = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+            flower.style.left = `${Math.random() * 100}vw`;
+            flower.style.animationDuration = `${Math.random() * 7 + 8}s`;
+            flower.style.fontSize = `${Math.random() * 1 + 1}rem`;
+            floatingContainer.appendChild(flower);
+            setTimeout(() => { flower.remove(); }, 15000);
+        }
+        for(let i=0; i<15; i++){ setTimeout(createFloatingFlower, Math.random() * 500); }
+        setInterval(createFloatingFlower, 800);
+
+        // --- REFINED COUNTDOWN TIMER LOGIC ---
+
+        const eventDate = new Date("2025-09-06T09:30:00").getTime();
+        const clock = document.getElementById('countdown');
+        let countdownInterval;
+
+        /**
+         * Updates a single flip card unit (days, hours, etc.)
+         * @param {string} id - The ID of the card element (e.g., "days").
+         * @param {string} value - The new two-digit value to display.
+         * @param {boolean} isInitialSetup - If true, sets the value instantly without animation.
+         */
+        function updateCard(id, value, isInitialSetup = false) {
+            const card = document.getElementById(id);
+            if (!card) return;
+
+            const top = card.querySelector(".card__top");
+            const bottom = card.querySelector(".card__bottom");
+            const back = card.querySelector(".card__back");
+            const backBottom = card.querySelector(".card__back .card__bottom");
+            
+            if (isInitialSetup) {
+                top.textContent = value;
+                bottom.setAttribute("data-value", value);
+                back.setAttribute("data-value", value);
+                backBottom.setAttribute("data-value", value);
+                return;
+            }
+
+            const currentValue = top.textContent;
+            if (currentValue === value) {
+                return;
+            }
+            
+            // Prepare the back of the card with the NEW value
+            back.setAttribute("data-value", value);
+            backBottom.setAttribute("data-value", value);
+
+            // The visible static bottom half should hold the OLD value during the flip
+            bottom.setAttribute("data-value", currentValue);
+
+            // Trigger the animation
+            card.classList.add("flip");
+
+            // This timeout is timed to fire as the top flip animation finishes.
+            setTimeout(() => {
+                // Update the static top half to the new value. It's revealed at this moment.
+                top.textContent = value;
+            }, 290); // Firing it just before the top animation ends to avoid any flicker
+
+            // This timeout is for cleaning up after the ENTIRE animation is over.
+            setTimeout(() => {
+                // Now that the bottom flip is done, update the static bottom to the new value.
+                bottom.setAttribute("data-value", value);
+                // Clean up the animation class so it can be triggered again.
+                card.classList.remove("flip");
+            }, 750); // Matches total animation time (0.3s + 0.45s)
+        }
+
+        /**
+         * Calculates the time difference and calls updateCard for each unit.
+         * @param {boolean} isInitial - Flag for the first run.
+         */
+        function updateTime(isInitial = false) {
+            const now = new Date().getTime();
+            const diff = eventDate - now;
+
+            if (diff <= 0) {
+                if (clock) clock.innerHTML = "<h3 style='color: var(--primary-gold); font-family: Cinzel, serif;'>The Celebration Has Begun!</h3>";
+                if (countdownInterval) clearInterval(countdownInterval);
+                return;
+            }
+
+            const days = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            const hours = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+
+            updateCard("days", days, isInitial);
+            updateCard("hours", hours, isInitial);
+            updateCard("minutes", minutes, isInitial);
+            updateCard("seconds", seconds, isInitial);
+        }
+        
+        function initializeClock() {
+            updateTime(true); 
+            countdownInterval = setInterval(() => updateTime(false), 1000);
+        }
+        
+        initializeClock();
+
+        // --- Social Share Logic ---
+        const pageUrl = encodeURIComponent(window.location.href);
+        const shareText = encodeURIComponent("Join the Onaavesham 2.0 celebration at NFSU!");
+        document.getElementById('share-whatsapp').href = `https://api.whatsapp.com/send?text=${shareText} ${pageUrl}`;
+        document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+        document.getElementById('share-instagram').href = `https://www.instagram.com/`;
+    });
+    
+    // --- Donation Button Logic ---
+    function openDonationLink() {
+        const donationLink = 'YOUR_DONATION_LINK_HERE'; 
+        if (donationLink === 'YOUR_DONATION_LINK_HERE') {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.left = '0';
+            modal.style.top = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+            modal.innerHTML = `
+                <div style="background: var(--dark-bg); color: var(--light-text); padding: 2rem; border-radius: 15px; text-align: center; border: 1px solid var(--primary-gold);">
+                    <h3 style="color: var(--primary-gold); margin-bottom: 1rem;">Donation Details</h3>
+                    <p>Donation details will be available soon!</p>
+                    <p style="margin-bottom: 1.5rem;">Please contact an organizer for more information.</p>
+                    <button style="background: var(--primary-red); color: white; border: none; padding: 0.5rem 1rem; border-radius: 10px; cursor: pointer;">Close</button>
+                </div>
+            `;
+            modal.querySelector('button').onclick = () => modal.remove();
+            document.body.appendChild(modal);
+        } else {
+            window.open(donationLink, '_blank');
+        }
+    }
+
+    // --- Simple parallax for falling flowers ---
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const parallax = document.querySelector('.floating-elements');
+        if (parallax) {
+            parallax.style.transform = `translateY(${scrolled * 0.3}px)`;
+        }
+    });
+
+    // --- New Fade-In Script ---
+    window.onload = function() {
+        const overlay = document.querySelector('.fade-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+        }
+    };
+</script>
+</body>
+</html>
