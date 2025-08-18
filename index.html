@@ -64,38 +64,183 @@
             background: rgba(0, 0, 0, 0.4);
             z-index: 2;
         }
+
+        /* Fallback play button for iOS */
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            background: rgba(255, 215, 0, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 24px;
+            color: #120c0b;
+            cursor: pointer;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .play-button:hover {
+            background: rgba(255, 215, 0, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-button::before {
+            content: '▶';
+            margin-left: 4px;
+        }
+
+        /* Loading indicator */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            font-size: 18px;
+            color: var(--primary-gold);
+        }
     </style>
 </head>
 <body>
     
     <div class="video-container">
-        <video id="intro-video" autoplay muted playsinline webkit-playsinline>
+        <video id="intro-video" 
+               muted 
+               playsinline 
+               webkit-playsinline
+               preload="auto"
+               controls="false">
             <source src="videos/Onam.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="video-overlay"></div>
+        <button class="play-button" id="play-btn"></button>
+        <div class="loading" id="loading">Loading...</div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.getElementById('intro-video');
             const videoContainer = document.querySelector('.video-container');
+            const playButton = document.getElementById('play-btn');
+            const loading = document.getElementById('loading');
+            
+            let videoPlayed = false;
+            let userInteracted = false;
 
-            // Listen for the 'ended' event to trigger the fade-out and redirect
-            video.addEventListener('ended', () => {
+            // Function to attempt video play
+            const attemptPlay = async () => {
+                try {
+                    loading.style.display = 'block';
+                    await video.play();
+                    playButton.style.display = 'none';
+                    loading.style.display = 'none';
+                    videoPlayed = true;
+                } catch (error) {
+                    console.log('Autoplay failed:', error);
+                    // Show play button for manual interaction
+                    playButton.style.display = 'block';
+                    loading.style.display = 'none';
+                }
+            };
+
+            // Function to handle video end
+            const handleVideoEnd = () => {
                 // Fade out the entire video container
                 videoContainer.style.opacity = '0';
                 
                 // After the container fades, redirect to the main page
                 setTimeout(() => {
                     window.location.href = './main.html'; 
-                },500); // Wait for the fade-out transition to complete (0.5s)
+                }, 500); // Wait for the fade-out transition to complete (0.5s)
+            };
+
+            // iOS Safari detection
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            // Event listeners for video
+            video.addEventListener('loadedmetadata', () => {
+                loading.style.display = 'none';
+                
+                // For iOS, we need user interaction first
+                if (isIOS || isSafari) {
+                    playButton.style.display = 'block';
+                } else {
+                    // Try autoplay on other platforms
+                    attemptPlay();
+                }
             });
-            
-            // For a smoother initial experience, automatically play the video once it's ready
+
+            video.addEventListener('ended', handleVideoEnd);
+
             video.addEventListener('canplaythrough', () => {
-                video.play();
+                if (!isIOS && !isSafari && !videoPlayed) {
+                    attemptPlay();
+                }
             });
+
+            // Handle play button click
+            playButton.addEventListener('click', async () => {
+                userInteracted = true;
+                await attemptPlay();
+            });
+
+            // Handle user interaction for iOS
+            document.addEventListener('touchstart', async () => {
+                if (!userInteracted && (isIOS || isSafari)) {
+                    userInteracted = true;
+                    if (!videoPlayed) {
+                        await attemptPlay();
+                    }
+                }
+            }, { once: true });
+
+            // Fallback click event for desktop
+            document.addEventListener('click', async () => {
+                if (!userInteracted) {
+                    userInteracted = true;
+                    if (!videoPlayed) {
+                        await attemptPlay();
+                    }
+                }
+            }, { once: true });
+
+            // Handle page visibility change (iOS background handling)
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    video.pause();
+                } else if (userInteracted && !video.ended) {
+                    video.play().catch(e => console.log('Resume play failed:', e));
+                }
+            });
+
+            // Set video to start from beginning
+            video.currentTime = 0;
+
+            // Prevent video context menu on mobile
+            video.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+
+            // Handle video error
+            video.addEventListener('error', (e) => {
+                console.error('Video error:', e);
+                loading.innerHTML = 'Video failed to load. <a href="./main.html" style="color: var(--primary-gold);">Continue to main page</a>';
+            });
+
+            // Timeout fallback - if video doesn't load/play within 10 seconds
+            setTimeout(() => {
+                if (!videoPlayed && !userInteracted) {
+                    loading.innerHTML = 'Having trouble loading the video? <a href="./main.html" style="color: var(--primary-gold);">Skip to main page</a>';
+                    playButton.style.display = 'block';
+                }
+            }, 10000);
         });
     </script>
 </body>
