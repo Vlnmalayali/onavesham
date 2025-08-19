@@ -5,11 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=1.0, user-scalable=no">
     <title>Onaavesham 2.0 | NFSU</title>
     
-    <link href="https://fonts.cdnfonts.com/css/samarkan" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Tangerine:wght@700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Critical Resource Preloading -->
+    <link rel="preload" href="images/bg.webp" as="image">
+    <link rel="preload" href="https://fonts.cdnfonts.com/css/samarkan" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.cdnfonts.com/css/samarkan"></noscript>
     
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Tangerine:wght@700&family=Hind+Siliguri:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Tangerine:wght@700&family=Hind+Siliguri:wght@400;600&display=swap"></noscript>
+    
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"></noscript>
+    
+    <!-- Your existing styles here -->
     <style>
+        /* Add this optimization to existing styles */
+        
+        /* Optimize fade overlay for faster initial load */
+        .fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark-bg);
+            z-index: 999;
+            transition: opacity 0.3s ease-in-out; /* Reduced from 0.5s */
+            pointer-events: none;
+        }
+        
+        /* Reduce animation duration for faster perceived loading */
+        .floating-flower {
+            position: absolute;
+            top: -10vh;
+            animation: fall linear infinite;
+            opacity: 0.3; /* Reduced opacity for better performance */
+            text-shadow: 0 0 8px rgba(0,0,0,0.5);
+            will-change: transform; /* Optimize for animations */
+        }
+        
+        /* Optimize gallery animation */
+        .slides-track {
+            display: flex;
+            width: calc(350px * 14);
+            animation: slideMove 40s linear infinite;
+            will-change: transform; /* Optimize for animations */
+        }
+        
+        /* Optimize video loading */
+        .media-container video {
+            width: 100%;
+            max-width: 100%; 
+            height: auto;
+            display: block;
+            loading: lazy; /* Add lazy loading if supported */
+        }
+        
+        /* Optimize image loading with better responsive handling */
+        img {
+            loading: lazy; /* Enable lazy loading */
+            decoding: async; /* Enable async decoding */
+        }
+        
+        /* Critical CSS for above-the-fold content */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            padding-bottom: 15vh; 
+            position: relative;
+            contain: layout style paint; /* CSS containment for better performance */
+        }
+        
         /* --- Global Styles & CSS Reset --- */
         :root {
             --primary-gold: #ffd700;
