@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onaavesham | Intro</title>
     
-    <link href="https://fonts.cdnfonts.com/css/samarkan" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="videos/Onam.mp4" as="video" type="video/mp4">
+    <link rel="prefetch" href="./main.html">
+    <link rel="preload" href="https://fonts.cdnfonts.com/css/samarkan" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <style>
         /* --- Global Styles & CSS Reset --- */
@@ -27,12 +30,11 @@
         body, html {
             height: 100%;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; /* Prevent scrolling on the intro page */
+            overflow: hidden;
             background-color: var(--dark-bg);
             color: var(--light-text);
         }
 
-        /* --- Video Container and Styling --- */
         .video-container {
             position: fixed;
             top: 0;
@@ -40,8 +42,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            /* Added transition for a smooth fade-out */
-            transition: opacity 0.5s ease-in-out; 
+            transition: opacity 0.3s ease-in-out; /* Reduced from 0.5s */
         }
         
         #intro-video {
@@ -51,10 +52,9 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            object-fit: contain; /* Ensures video is fully visible without cropping */
+            object-fit: contain;
         }
         
-        /* Video overlay to darken it slightly for better text readability */
         .video-overlay {
             position: absolute;
             top: 0;
@@ -65,7 +65,6 @@
             z-index: 2;
         }
 
-        /* Fallback play button for iOS */
         .play-button {
             position: absolute;
             top: 50%;
@@ -94,7 +93,6 @@
             margin-left: 4px;
         }
 
-        /* Loading indicator */
         .loading {
             position: absolute;
             top: 50%;
@@ -103,6 +101,26 @@
             z-index: 5;
             font-size: 18px;
             color: var(--primary-gold);
+        }
+
+        .skip-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 15;
+            background: rgba(255, 215, 0, 0.9);
+            color: #120c0b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .skip-button:hover {
+            background: rgba(255, 215, 0, 1);
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -113,13 +131,15 @@
                muted 
                playsinline 
                webkit-playsinline
-               preload="auto"
+               preload="metadata"
                controls="false">
             <source src="videos/Onam.mp4" type="video/mp4">
             Your browser does not support the video tag.
+        </source>
         </video>
         <div class="video-overlay"></div>
         <button class="play-button" id="play-btn"></button>
+        <button class="skip-button" id="skip-btn">Skip →</button>
         <div class="loading" id="loading">Loading...</div>
     </div>
 
@@ -128,10 +148,31 @@
             const video = document.getElementById('intro-video');
             const videoContainer = document.querySelector('.video-container');
             const playButton = document.getElementById('play-btn');
+            const skipButton = document.getElementById('skip-btn');
             const loading = document.getElementById('loading');
             
             let videoPlayed = false;
             let userInteracted = false;
+            let redirectTimeout;
+
+            // Preload main.html in the background
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = './main.html';
+            document.head.appendChild(link);
+
+            // Function to redirect to main page
+            const redirectToMain = () => {
+                if (redirectTimeout) clearTimeout(redirectTimeout);
+                // Immediate redirect with faster transition
+                videoContainer.style.opacity = '0';
+                setTimeout(() => {
+                    window.location.href = './main.html';
+                }, 150); // Reduced from 500ms
+            };
+
+            // Skip button functionality
+            skipButton.addEventListener('click', redirectToMain);
 
             // Function to attempt video play
             const attemptPlay = async () => {
@@ -143,21 +184,9 @@
                     videoPlayed = true;
                 } catch (error) {
                     console.log('Autoplay failed:', error);
-                    // Show play button for manual interaction
                     playButton.style.display = 'block';
                     loading.style.display = 'none';
                 }
-            };
-
-            // Function to handle video end
-            const handleVideoEnd = () => {
-                // Fade out the entire video container
-                videoContainer.style.opacity = '0';
-                
-                // After the container fades, redirect to the main page
-                setTimeout(() => {
-                    window.location.href = './main.html'; 
-                }, 500); // Wait for the fade-out transition to complete (0.5s)
             };
 
             // iOS Safari detection
@@ -165,21 +194,19 @@
             const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
             // Event listeners for video
-            video.addEventListener('loadedmetadata', () => {
+            video.addEventListener('loadeddata', () => {
                 loading.style.display = 'none';
                 
-                // For iOS, we need user interaction first
                 if (isIOS || isSafari) {
                     playButton.style.display = 'block';
                 } else {
-                    // Try autoplay on other platforms
                     attemptPlay();
                 }
             });
 
-            video.addEventListener('ended', handleVideoEnd);
+            video.addEventListener('ended', redirectToMain);
 
-            video.addEventListener('canplaythrough', () => {
+            video.addEventListener('canplay', () => {
                 if (!isIOS && !isSafari && !videoPlayed) {
                     attemptPlay();
                 }
@@ -202,7 +229,8 @@
             }, { once: true });
 
             // Fallback click event for desktop
-            document.addEventListener('click', async () => {
+            document.addEventListener('click', async (e) => {
+                if (e.target === skipButton) return; // Don't trigger on skip button
                 if (!userInteracted) {
                     userInteracted = true;
                     if (!videoPlayed) {
@@ -211,14 +239,18 @@
                 }
             }, { once: true });
 
-            // Handle page visibility change (iOS background handling)
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    video.pause();
-                } else if (userInteracted && !video.ended) {
-                    video.play().catch(e => console.log('Resume play failed:', e));
-                }
+            // Handle video error
+            video.addEventListener('error', (e) => {
+                console.error('Video error:', e);
+                loading.innerHTML = 'Video failed to load. <a href="./main.html" style="color: var(--primary-gold);">Continue to main page</a>';
             });
+
+            // Reduced timeout - redirect after 8 seconds if nothing happens
+            redirectTimeout = setTimeout(() => {
+                if (!videoPlayed && !userInteracted) {
+                    redirectToMain();
+                }
+            }, 8000); // Reduced from 10 seconds
 
             // Set video to start from beginning
             video.currentTime = 0;
@@ -227,20 +259,6 @@
             video.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
             });
-
-            // Handle video error
-            video.addEventListener('error', (e) => {
-                console.error('Video error:', e);
-                loading.innerHTML = 'Video failed to load. <a href="./main.html" style="color: var(--primary-gold);">Continue to main page</a>';
-            });
-
-            // Timeout fallback - if video doesn't load/play within 10 seconds
-            setTimeout(() => {
-                if (!videoPlayed && !userInteracted) {
-                    loading.innerHTML = 'Having trouble loading the video? <a href="./main.html" style="color: var(--primary-gold);">Skip to main page</a>';
-                    playButton.style.display = 'block';
-                }
-            }, 10000);
         });
     </script>
 </body>
